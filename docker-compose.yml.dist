@@ -1,0 +1,229 @@
+version: "3.1"
+
+services:
+  
+  #########################
+  #       PROGETTO1       #
+  #########################
+
+  pr1_httpd:
+    image: httpd:2.4
+    ports:
+      # In port 80, there is Varnish.
+      - "8081:80"
+    volumes:
+      - "./docker/httpd/httpd_pr1.conf:/usr/local/apache2/conf/httpd.conf"
+      - "./docroot:/var/www/docroot:ro"
+    restart: unless-stopped
+
+  pr1_php:
+    image: wellnetimages/php:5.6.18
+    expose:
+      - 9000
+    volumes:
+      - "./docker/php/php_p1.ini:/usr/local/etc/php/conf.d/php.ini"
+      - "./docker/php/ssmtp_pr1.conf:/etc/ssmtp/ssmtp.conf"
+      - "./docroot:/var/www/docroot"
+      - "./data/pr1/settings.local.php:/var/www/docroot/sites/default/settings.local.php"
+      # Used for problem permission.
+      # - "./docker/permission-user.sh:/tmp/permission-user.sh"
+      # Used for problem permission.
+      # command: sh /tmp/permission-user.sh
+    environment:
+      AH_SITE_ENVIRONMENT: local
+    restart: unless-stopped
+
+  pr1_drush:
+    container_name: pr1_drush_1
+    image: wellnetimages/php:5.6.18
+    ports:
+      - "2223:22"
+    volumes:
+      - "./docker/php/drush_pr1.ini:/usr/local/etc/php/conf.d/drush.ini"
+      - "./docker/php/ssmtp_pr1.conf:/etc/ssmtp/ssmtp.conf"
+      - "./docroot:/var/www/docroot"
+      - "./data/pr1/settings.local.php:/var/www/docroot/sites/default/settings.local.php"
+      # Used for problem permission.
+      # - "./docker/permission-user.sh:/tmp/permission-user-drush.sh"
+    command: /usr/sbin/sshd -D
+      # Used for problem permission.
+      # command: sh /tmp/permission-user-drush.sh
+    environment:
+      AH_SITE_ENVIRONMENT: local
+    restart: unless-stopped
+
+  pr1_mysql:
+    image: mysql:5.7.11
+    ports:
+      - "3307:3306"
+    volumes:
+      - "./docker/mysql/custom_pr1.cnf:/etc/mysql/conf.d/custom.cnf"
+      - "db_data_pr1:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    restart: unless-stopped
+
+  pr1_solr:
+    image: guywithnose/solr:3.6.2
+    ports:
+      - "8986:8983"
+    volumes:
+      - "./docroot/sites/all/modules/contrib/search_api_solr/solr-conf/3.x:/opt/solr/example/solr/conf"
+      - "solr_data:/opt/solr/example/solr/data"
+
+  #########################
+  #       PROGETTO2       #
+  #########################
+
+  pr2_httpd:
+    image: httpd:2.4
+    ports:
+      # In port 80, there is Varnish.
+      - "8082:80"
+    volumes:
+      - "./docker/httpd/httpd_pr2.conf:/usr/local/apache2/conf/httpd.conf"
+      - "./docroot:/var/www/docroot:ro"
+    restart: unless-stopped
+
+  pr2_php:
+    image: wellnetimages/php:5.6.18
+    expose:
+      - 9000
+    volumes:
+      - "./docker/php/php_pr2.ini:/usr/local/etc/php/conf.d/php.ini"
+      - "./docker/php/ssmtp_pr2.conf:/etc/ssmtp/ssmtp.conf"
+      - "./docroot:/var/www/docroot"
+      - "./data/pr2/settings.local.php:/var/www/docroot/sites/default/settings.local.php"
+      # Used for problem permission.
+      # - "./docker/permission-user.sh:/tmp/permission-user.sh"
+      # Used for problem permission.
+      # command: sh /tmp/permission-user.sh
+    environment:
+      AH_SITE_ENVIRONMENT: local
+    restart: unless-stopped
+
+  pr2_drush:
+    container_name: pr2_drush_1
+    image: wellnetimages/php:5.6.18
+    ports:
+      - "2223:22"
+    volumes:
+      - "./docker/php/drush_pr2.ini:/usr/local/etc/php/conf.d/drush.ini"
+      - "./docker/php/ssmtp_pr2.conf:/etc/ssmtp/ssmtp.conf"
+      - "./docroot:/var/www/docroot"
+      - "./data/pr2/settings.local.php:/var/www/docroot/sites/default/settings.local.php"
+      # Used for problem permission.
+      # - "./docker/permission-user.sh:/tmp/permission-user-drush.sh"
+    command: /usr/sbin/sshd -D
+      # Used for problem permission.
+      # command: sh /tmp/permission-user-drush.sh
+    environment:
+      AH_SITE_ENVIRONMENT: local
+    restart: unless-stopped
+
+  pr2_mysql:
+    image: mysql:5.7.11
+    ports:
+      - "3308:3306"
+    volumes:
+      - "./docker/mysql/custom_pr2.cnf:/etc/mysql/conf.d/custom.cnf"
+      - "db_data_pr2:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    restart: unless-stopped
+
+  pr2_elasticsearch:
+    image: elasticsearch:1.5
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - es_data:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=ElasticCluster
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+
+  
+  ##########################################
+  # PROGETTO3
+  ##########################################
+
+  pr3_httpd:
+    image: httpd:2.4
+    ports:
+      # In port 80, there is Varnish.
+      - "8083:80"
+    volumes:
+      - "./docker/httpd/httpd_pr3.conf:/usr/local/apache2/conf/httpd.conf"
+      - "./docroot:/var/www/docroot:ro"
+    restart: unless-stopped
+
+  pr3_php:
+    image: wellnetimages/php:5.6.18
+    expose:
+      - 9000
+    volumes:
+      - "./docker/php/php_pr3.ini:/usr/local/etc/php/conf.d/php.ini"
+      - "./docker/php/ssmtp_pr3.conf:/etc/ssmtp/ssmtp.conf"
+      - "./docroot:/var/www/docroot"
+      - "./data/pr3/settings.local.php:/var/www/docroot/sites/default/settings.local.php"
+      # Used for problem permission.
+      # - "./docker/permission-user.sh:/tmp/permission-user.sh"
+      # Used for problem permission.
+      # command: sh /tmp/permission-user.sh
+    environment:
+      AH_SITE_ENVIRONMENT: local
+    restart: unless-stopped
+
+  pr3_drush:
+    container_name: pr3_drush_1
+    image: wellnetimages/php:5.6.18
+    ports:
+      - "2223:22"
+    volumes:
+      - "./docker/php/drush_pr3.ini:/usr/local/etc/php/conf.d/drush.ini"
+      - "./docker/php/ssmtp_pr3.conf:/etc/ssmtp/ssmtp.conf"
+      - "./docroot:/var/www/docroot"
+      - "./data/pr3/settings.local.php:/var/www/docroot/sites/default/settings.local.php"
+      # Used for problem permission.
+      # - "./docker/permission-user.sh:/tmp/permission-user-drush.sh"
+    command: /usr/sbin/sshd -D
+      # Used for problem permission.
+      # command: sh /tmp/permission-user-drush.sh
+    environment:
+      AH_SITE_ENVIRONMENT: local
+    restart: unless-stopped
+
+  pr3_mysql:
+    image: mysql:5.7.11
+    ports:
+      - "3309:3306"
+    volumes:
+      - "./docker/mysql/custom_pr3.cnf:/etc/mysql/conf.d/custom.cnf"
+      - "db_data_pr3:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    restart: unless-stopped
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+    restart: unless-stopped
+
+volumes:
+  db_data_pr1:
+  db_data_pr2:
+  db_data_pr3:
+  solr_data_pr1:
+  es_data:

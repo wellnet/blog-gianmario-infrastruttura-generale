@@ -1,0 +1,18 @@
+pr1:
+  databases:
+    drupal:
+      user: 'root'
+      password: 'root'
+      host: 127.0.0.1
+      port: 3308
+      dbname: 'drupal'
+      dump_filename: 'pr1.drupal.sql'
+      skip_backup: false
+  drush_container: 'pr1_drush_1'
+  root_directory: 'progetto1'
+  code_directory: 'docroot'
+  drupal:
+    file_temporary_path: '/tmp'
+  account:
+    username: admin
+    password: admin
