@@ -1,0 +1,12 @@
+[submodule "project1"]
+	path = project1
+	url = git@github.com:wellnet/blog-gianmario-progetto1.git
+	branch = master
+[submodule "project2"]
+	path = project2
+	url = git@github.com:wellnet/blog-gianmario-progetto2.git
+	branch = master
+[submodule "project3"]
+	path = project3
+	url = git@github.com:wellnet/blog-gianmario-progetto3.git
+	branch = master

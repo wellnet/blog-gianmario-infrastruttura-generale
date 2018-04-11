@@ -8,7 +8,7 @@ pr3:
       dbname: 'drupal'
       dump_filename: 'pr3.drupal.sql'
       skip_backup: false
-  drush_container: 'pr3_drush_1'
+  drush_container: 'ag_pr3_drush_1'
   root_directory: 'progetto3'
   code_directory: 'docroot'
   drupal:

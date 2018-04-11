@@ -1,0 +1,3 @@
+vendor
+docker-compose.yml
+build/build.*.local.default.yml

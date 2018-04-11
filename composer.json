@@ -1,6 +1,6 @@
 {
-  "name": "wellnet/hyperlocal-infrastructure-local",
-  "description": "Gestione infrastruttura locale del progetto Hyperlocal.",
+  "name": "wellnet/project-infrastructure-local",
+  "description": "Gestione infrastruttura locale del progetto.",
   "type": "project",
   "license": "GPL-2.0+",
   "require": {
